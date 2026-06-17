@@ -1,98 +1,409 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+  SafeAreaView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Platform,
+  RefreshControl,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useCurrencyConverter } from '@/src/presentation/hooks/use-currency-converter';
+import { CurrencyPickerModal } from '@/components/currency-picker-modal';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function CurrencyConverterScreen() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
-export default function HomeScreen() {
+  // Local View States (Pure UI Modal management)
+  const [fromModalVisible, setFromModalVisible] = useState<boolean>(false);
+  const [toModalVisible, setToModalVisible] = useState<boolean>(false);
+
+  // Consume Clean Architecture logic through the presentation hook
+  const {
+    amount,
+    setAmount,
+    fromCurrency,
+    setFromCurrency,
+    toCurrency,
+    setToCurrency,
+    fromInfo,
+    toInfo,
+    convertedAmount,
+    currentRateString,
+    lastUpdate,
+    loading,
+    refreshing,
+    error,
+    loadRates,
+    handleSwap,
+    handleQuickSelect,
+  } = useCurrencyConverter();
+
+  // Custom colors for themes
+  const theme = useMemo(() => {
+    return {
+      background: isDark ? '#12141C' : '#F4F6FA',
+      card: isDark ? '#1B1E2E' : '#FFFFFF',
+      text: isDark ? '#FFFFFF' : '#0F172A',
+      textSecondary: isDark ? '#94A3B8' : '#64748B',
+      border: isDark ? '#2E334D' : '#E2E8F0',
+      activeBorder: '#0A7EA4',
+      buttonBg: isDark ? '#25293C' : '#E2E8F0',
+      inputBg: isDark ? '#25293C' : '#F8FAFC',
+      swapBtnBg: '#0A7EA4',
+    };
+  }, [isDark]);
+
+  if (loading) {
+    return (
+      <View style={[styles.centerContainer, { backgroundColor: theme.background }]}>
+        <ActivityIndicator size="large" color={theme.activeBorder} />
+        <Text style={[styles.loadingText, { color: theme.textSecondary }]}>
+          Carregando cotações em tempo real...
+        </Text>
+      </View>
+    );
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => loadRates(true)}
+              tintColor={theme.activeBorder}
+              colors={[theme.activeBorder]}
             />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+          }
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <View>
+              <Text style={[styles.headerTitle, { color: theme.text }]}>Conversor</Text>
+              <Text style={[styles.headerSubtitle, { color: theme.textSecondary }]}>
+                Cotações Globais (Clean Arch)
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.refreshButton, { backgroundColor: theme.buttonBg }]}
+              onPress={() => loadRates(true)}
+            >
+              <Ionicons name="refresh" size={20} color={theme.text} />
+            </TouchableOpacity>
+          </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+          {/* Main Card */}
+          <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}>
+            
+            {/* Input "FROM" */}
+            <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>De (Origem)</Text>
+            <View style={[styles.rowContainer, { backgroundColor: theme.inputBg }]}>
+              <TextInput
+                style={[styles.input, { color: theme.text }]}
+                keyboardType="decimal-pad"
+                value={amount}
+                onChangeText={setAmount}
+                placeholder="0,00"
+                placeholderTextColor={theme.textSecondary}
+              />
+              <TouchableOpacity
+                style={[styles.currencySelector, { borderLeftColor: theme.border }]}
+                onPress={() => setFromModalVisible(true)}
+              >
+                <Text style={styles.flagText}>{fromInfo.flag}</Text>
+                <Text style={[styles.currencyCodeText, { color: theme.text }]}>{fromCurrency}</Text>
+                <Ionicons name="chevron-down" size={14} color={theme.textSecondary} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Swap Divider Line with Swap Button */}
+            <View style={styles.swapDividerRow}>
+              <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
+              <TouchableOpacity
+                style={[styles.swapButton, { backgroundColor: theme.swapBtnBg }]}
+                onPress={handleSwap}
+                activeOpacity={0.8}
+              >
+                <Ionicons name="swap-vertical" size={20} color="#FFFFFF" />
+              </TouchableOpacity>
+              <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
+            </View>
+
+            {/* Display "TO" */}
+            <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Para (Destino)</Text>
+            <View style={[styles.rowContainer, { backgroundColor: theme.inputBg }]}>
+              <View style={styles.resultContainer}>
+                <Text
+                  style={[styles.resultText, { color: theme.text }]}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                >
+                  {convertedAmount}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={[styles.currencySelector, { borderLeftColor: theme.border }]}
+                onPress={() => setToModalVisible(true)}
+              >
+                <Text style={styles.flagText}>{toInfo.flag}</Text>
+                <Text style={[styles.currencyCodeText, { color: theme.text }]}>{toCurrency}</Text>
+                <Ionicons name="chevron-down" size={14} color={theme.textSecondary} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Quick Shortcuts */}
+            <View style={styles.shortcutsRow}>
+              {[10, 50, 100, 500, 1000].map((val) => (
+                <TouchableOpacity
+                  key={val}
+                  style={[styles.shortcutBtn, { backgroundColor: theme.buttonBg }]}
+                  onPress={() => handleQuickSelect(val)}
+                >
+                  <Text style={[styles.shortcutText, { color: theme.text }]}>
+                    {fromInfo.symbol} {val.toLocaleString('pt-BR')}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* Details Card */}
+          <View style={[styles.detailsCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.textSecondary }]}>
+                Cotação Atual:
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.text }]}>
+                {currentRateString}
+              </Text>
+            </View>
+            <View style={[styles.detailSeparator, { backgroundColor: theme.border }]} />
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.textSecondary }]}>
+                Última Atualização:
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.textSecondary }]}>
+                {lastUpdate}
+              </Text>
+            </View>
+          </View>
+
+          {error && (
+            <View style={styles.errorBanner}>
+              <Ionicons name="warning" size={18} color="#D97706" style={{ marginRight: 8 }} />
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          )}
+        </ScrollView>
+
+        {/* Currency Select Modals */}
+        <CurrencyPickerModal
+          visible={fromModalVisible}
+          onClose={() => setFromModalVisible(false)}
+          selectedCurrency={fromCurrency}
+          onSelect={setFromCurrency}
+          title="Converter de"
+        />
+
+        <CurrencyPickerModal
+          visible={toModalVisible}
+          onClose={() => setToModalVisible(false)}
+          selectedCurrency={toCurrency}
+          onSelect={setToCurrency}
+          title="Converter para"
+        />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  safeArea: {
+    flex: 1,
   },
-  stepContainer: {
-    gap: 8,
+  scrollContainer: {
+    paddingHorizontal: 24,
+    paddingTop: Platform.OS === 'android' ? 24 : 12,
+    paddingBottom: 40,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+    marginTop: 16,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+  },
+  headerSubtitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  refreshButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    borderRadius: 24,
+    padding: 20,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 16,
+    height: 64,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  input: {
+    flex: 1,
+    fontSize: 22,
+    fontWeight: '700',
+    height: '100%',
+    padding: 0,
+  },
+  resultContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  resultText: {
+    fontSize: 22,
+    fontWeight: '700',
+  },
+  currencySelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderLeftWidth: 1,
+    paddingLeft: 16,
+    height: 40,
+  },
+  flagText: {
+    fontSize: 24,
+    marginRight: 8,
+  },
+  currencyCodeText: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginRight: 6,
+  },
+  swapDividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 14,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+  },
+  swapButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  shortcutsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 16,
+    gap: 8,
+  },
+  shortcutBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+  },
+  shortcutText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  detailsCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 16,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  detailLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  detailValue: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  detailSeparator: {
+    height: 1,
+    marginVertical: 12,
+  },
+  errorBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF3C7',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+  },
+  errorText: {
+    fontSize: 13,
+    color: '#92400E',
+    fontWeight: '500',
+    flex: 1,
   },
 });
