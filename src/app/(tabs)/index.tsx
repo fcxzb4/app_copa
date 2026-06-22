@@ -14,9 +14,9 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { useCurrencyConverter } from '@/src/presentation/hooks/use-currency-converter';
-import { CurrencyPickerModal } from '@/components/currency-picker-modal';
+import { useColorScheme } from '@/presentation/hooks/use-color-scheme';
+import { useCurrencyConverter } from '@/presentation/hooks/use-currency-converter';
+import { CurrencyPickerModal } from '@/presentation/components/currency-picker-modal';
 
 export default function CurrencyConverterScreen() {
   const colorScheme = useColorScheme();

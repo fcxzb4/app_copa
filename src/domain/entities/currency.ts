@@ -5,6 +5,16 @@ export interface Currency {
   flag: string;
 }
 
+
+export interface CurrencyPickerModalProps {
+  visible: boolean;
+  onClose: () => void;
+  selectedCurrency: string;
+  onSelect: (currencyCode: string) => void;
+  title: string;
+}
+
+
 export interface ExchangeRates {
   rates: Record<string, number>;
   lastUpdate: string;

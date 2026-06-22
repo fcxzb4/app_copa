@@ -1,27 +1,25 @@
-import React, { useState, useMemo } from 'react';
+import { CURRENCY_LIST, CurrencyPickerModalProps } from '@/domain/entities/currency';
+import { useThemeStyles } from '@/presentation/components/theme_styles';
+import { useColorScheme } from '@/presentation/hooks/use-color-scheme';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useMemo, useState } from 'react';
+import { createRenderItem } from './render_item';
+
+
+
 import {
+  FlatList,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { CURRENCY_LIST, Currency as CurrencyInfo } from '@/src/domain/entities/currency';
 
-interface CurrencyPickerModalProps {
-  visible: boolean;
-  onClose: () => void;
-  selectedCurrency: string;
-  onSelect: (currencyCode: string) => void;
-  title: string;
-}
 
 export function CurrencyPickerModal({
   visible,
@@ -32,23 +30,10 @@ export function CurrencyPickerModal({
 }: CurrencyPickerModalProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const themeStyles = useThemeStyles();
   const [searchQuery, setSearchQuery] = useState('');
 
   // Styles based on theme
-  const themeStyles = useMemo(() => {
-    return {
-      modalBg: isDark ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)',
-      container: isDark ? '#1C1C1E' : '#FFFFFF',
-      text: isDark ? '#FFFFFF' : '#000000',
-      subtext: isDark ? '#8E8E93' : '#636366',
-      inputBg: isDark ? '#2C2C2E' : '#F2F2F7',
-      inputText: isDark ? '#FFFFFF' : '#000000',
-      inputPlaceholder: isDark ? '#8E8E93' : '#AEAEB2',
-      border: isDark ? '#38383A' : '#E5E5EA',
-      itemHover: isDark ? '#2C2C2E' : '#F2F2F7',
-      accent: '#0A7EA4', // Theme Blue
-    };
-  }, [isDark]);
 
   // Filter currencies based on query
   const filteredCurrencies = useMemo(() => {
@@ -67,34 +52,7 @@ export function CurrencyPickerModal({
     onClose();
   };
 
-  const renderItem = ({ item }: { item: CurrencyInfo }) => {
-    const isSelected = item.code === selectedCurrency;
-
-    return (
-      <TouchableOpacity
-        style={[
-          styles.item,
-          { borderBottomColor: themeStyles.border },
-          isSelected && { backgroundColor: isDark ? '#2A3C44' : '#E6F4F8' },
-        ]}
-        onPress={() => handleSelect(item.code)}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.flag}>{item.flag}</Text>
-        <View style={styles.itemMeta}>
-          <Text style={[styles.itemCode, { color: themeStyles.text }]}>
-            {item.code}
-          </Text>
-          <Text style={[styles.itemName, { color: themeStyles.subtext }]}>
-            {item.name}
-          </Text>
-        </View>
-        {isSelected && (
-          <Ionicons name="checkmark-circle" size={24} color={themeStyles.accent} />
-        )}
-      </TouchableOpacity>
-    );
-  };
+  const renderItem = createRenderItem(isDark, selectedCurrency, handleSelect);
 
   return (
     <Modal
@@ -170,7 +128,7 @@ export function CurrencyPickerModal({
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   keyboardView: {
     flex: 1,
     justifyContent: 'flex-end',
