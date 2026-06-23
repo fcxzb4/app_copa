@@ -1,26 +1,15 @@
-import React, { useState, useMemo } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  ScrollView,
-  SafeAreaView,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Platform,
-  RefreshControl,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { styles } from '@/app/app_styles';
+import { useAppTheme } from '@/app/app_theme';
+import { CurrencyPickerModal } from '@/presentation/components/currency-picker-modal';
 import { useColorScheme } from '@/presentation/hooks/use-color-scheme';
 import { useCurrencyConverter } from '@/presentation/hooks/use-currency-converter';
-import { CurrencyPickerModal } from '@/presentation/components/currency-picker-modal';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { ActivityIndicator, Keyboard, RefreshControl, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
 export default function CurrencyConverterScreen() {
   const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const theme = useAppTheme();
 
   // Local View States (Pure UI Modal management)
   const [fromModalVisible, setFromModalVisible] = useState<boolean>(false);
@@ -46,21 +35,6 @@ export default function CurrencyConverterScreen() {
     handleSwap,
     handleQuickSelect,
   } = useCurrencyConverter();
-
-  // Custom colors for themes
-  const theme = useMemo(() => {
-    return {
-      background: isDark ? '#12141C' : '#F4F6FA',
-      card: isDark ? '#1B1E2E' : '#FFFFFF',
-      text: isDark ? '#FFFFFF' : '#0F172A',
-      textSecondary: isDark ? '#94A3B8' : '#64748B',
-      border: isDark ? '#2E334D' : '#E2E8F0',
-      activeBorder: '#0A7EA4',
-      buttonBg: isDark ? '#25293C' : '#E2E8F0',
-      inputBg: isDark ? '#25293C' : '#F8FAFC',
-      swapBtnBg: '#0A7EA4',
-    };
-  }, [isDark]);
 
   if (loading) {
     return (
@@ -106,7 +80,7 @@ export default function CurrencyConverterScreen() {
 
           {/* Main Card */}
           <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}>
-            
+
             {/* Input "FROM" */}
             <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>De (Origem)</Text>
             <View style={[styles.rowContainer, { backgroundColor: theme.inputBg }]}>
@@ -229,181 +203,3 @@ export default function CurrencyConverterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  scrollContainer: {
-    paddingHorizontal: 24,
-    paddingTop: Platform.OS === 'android' ? 24 : 12,
-    paddingBottom: 40,
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-    marginTop: 16,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-  },
-  headerSubtitle: {
-    fontSize: 15,
-    fontWeight: '500',
-    marginTop: 2,
-  },
-  refreshButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card: {
-    borderRadius: 24,
-    padding: 20,
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 16,
-    height: 64,
-    paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  input: {
-    flex: 1,
-    fontSize: 22,
-    fontWeight: '700',
-    height: '100%',
-    padding: 0,
-  },
-  resultContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  resultText: {
-    fontSize: 22,
-    fontWeight: '700',
-  },
-  currencySelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderLeftWidth: 1,
-    paddingLeft: 16,
-    height: 40,
-  },
-  flagText: {
-    fontSize: 24,
-    marginRight: 8,
-  },
-  currencyCodeText: {
-    fontSize: 16,
-    fontWeight: '700',
-    marginRight: 6,
-  },
-  swapDividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 14,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-  },
-  swapButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  shortcutsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 16,
-    gap: 8,
-  },
-  shortcutBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-  },
-  shortcutText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  detailsCard: {
-    borderRadius: 20,
-    borderWidth: 1,
-    padding: 16,
-  },
-  detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  detailLabel: {
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  detailValue: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  detailSeparator: {
-    height: 1,
-    marginVertical: 12,
-  },
-  errorBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FEF3C7',
-    borderRadius: 12,
-    padding: 12,
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: '#F59E0B',
-  },
-  errorText: {
-    fontSize: 13,
-    color: '#92400E',
-    fontWeight: '500',
-    flex: 1,
-  },
-});

@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { ExchangeRatesDataSourceImpl } from '../../infra/data-sources/exchange-rates-data-source';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ExchangeRatesRepositoryImpl } from '../../data/repositories/exchange-rates-repository-impl';
-import { GetExchangeRatesUseCase } from '../../use-cases/get-exchange-rates-use-case';
-import { ConvertCurrencyUseCase } from '../../use-cases/convert-currency-use-case';
 import { CURRENCY_LIST, Currency } from '../../domain/entities/currency';
+import { ExchangeRatesDataSourceImpl } from '../../infra/exchange-rates-data-source';
+import { ConvertCurrencyUseCase } from '../../use-cases/convert-currency-use-case';
+import { GetExchangeRatesUseCase } from '../../use-cases/get-exchange-rates-use-case';
 
 // Instantiate singletons of architecture layers
 const dataSource = new ExchangeRatesDataSourceImpl();

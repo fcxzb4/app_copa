@@ -1,10 +1,10 @@
+import { DEFAULT_FALLBACK_RATES, ExchangeRates } from '../../domain/entities/currency';
 import { ExchangeRatesRepository } from '../../domain/repositories/exchange-rates-repository';
-import { ExchangeRates, DEFAULT_FALLBACK_RATES } from '../../domain/entities/currency';
-import { ExchangeRatesDataSource } from '../../infra/data-sources/exchange-rates-data-source';
+import { ExchangeRatesDataSource } from '../../infra/exchange-rates-data-source';
 import { ExchangeRatesModel } from '../models/exchange-rates-model';
 
 export class ExchangeRatesRepositoryImpl implements ExchangeRatesRepository {
-  constructor(private readonly dataSource: ExchangeRatesDataSource) {}
+  constructor(private readonly dataSource: ExchangeRatesDataSource) { }
 
   async getExchangeRates(): Promise<ExchangeRates> {
     try {

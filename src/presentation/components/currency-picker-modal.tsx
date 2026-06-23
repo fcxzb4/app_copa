@@ -3,10 +3,6 @@ import { useThemeStyles } from '@/presentation/components/theme_styles';
 import { useColorScheme } from '@/presentation/hooks/use-color-scheme';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo, useState } from 'react';
-import { createRenderItem } from './render_item';
-
-
-
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -19,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { createRenderItem } from './render_item';
 
 
 export function CurrencyPickerModal({
