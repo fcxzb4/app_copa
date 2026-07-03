@@ -1,0 +1,225 @@
+import { Platform, StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+    },
+    heroSection: {
+        marginBottom: 24,
+        borderLeftWidth: 4,
+        borderLeftColor: '#FFD700',
+        paddingLeft: 16,
+    },
+    headerTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+    },
+    headerSubtitle: {
+        fontSize: 14,
+        color: '#94A3B8',
+        marginTop: 6,
+        lineHeight: 20,
+    },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#1E293B',
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#334155',
+        paddingHorizontal: 16,
+        marginBottom: 24,
+        height: 52,
+    },
+    searchIcon: {
+        fontSize: 18,
+        marginRight: 12,
+    },
+    searchInput: {
+        flex: 1,
+        color: '#FFFFFF',
+        fontSize: 16,
+        outlineStyle: 'none', // For web to remove default border highlight
+    } as any,
+    clearButton: {
+        padding: 8,
+    },
+    clearText: {
+        color: '#94A3B8',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    filterSection: {
+        marginBottom: 24,
+    },
+    filterLabel: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#E2E8F0',
+        marginBottom: 12,
+    },
+    filterGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 8,
+    },
+    filterButton: {
+        backgroundColor: '#151E33',
+        borderWidth: 1,
+        borderColor: '#22335C',
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 14,
+        minWidth: 100,
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        ...Platform.select({
+            web: {
+                transitionProperty: 'all',
+                transitionDuration: '0.15s',
+            },
+        }) as any,
+    },
+    filterButtonActive: {
+        backgroundColor: '#00E676', // Pitch Green for filtering
+        borderColor: '#00E676',
+    },
+    filterButtonText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#E2E8F0',
+    },
+    filterButtonTextActive: {
+        color: '#0A0E1A',
+    },
+    filterButtonDesc: {
+        fontSize: 10,
+        color: '#64748B',
+        marginTop: 2,
+        textAlign: 'center',
+    },
+    filterButtonDescActive: {
+        color: '#0A0E1A',
+        opacity: 0.8,
+    },
+    countContainer: {
+        marginBottom: 16,
+        paddingBottom: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#1E293B',
+    },
+    countText: {
+        fontSize: 14,
+        color: '#94A3B8',
+    },
+    countHighlight: {
+        color: '#FFD700',
+        fontWeight: 'bold',
+    },
+    grid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 16,
+    },
+    card: {
+        backgroundColor: 'rgba(30, 41, 59, 0.4)',
+        borderWidth: 1,
+        borderColor: '#2E3E5C',
+        borderRadius: 16,
+        padding: 16,
+        minWidth: 220,
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: '22%', // Roughly 4 cards per row on large screens
+        ...Platform.select({
+            web: {
+                transitionProperty: 'transform, border-color, box-shadow',
+                transitionDuration: '0.2s',
+                ':hover': {
+                    transform: 'translateY(-4px)',
+                    borderColor: '#FFD700',
+                    boxShadow: '0 10px 15px -3px rgba(255, 215, 0, 0.15)',
+                },
+            },
+        }) as any,
+    },
+    cardHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    cardFlag: {
+        fontSize: 32,
+    },
+    groupBadge: {
+        backgroundColor: 'rgba(255, 215, 0, 0.1)',
+        borderWidth: 1,
+        borderColor: '#FFD700',
+        borderRadius: 12,
+        paddingVertical: 2,
+        paddingHorizontal: 8,
+    },
+    groupBadgeText: {
+        color: '#FFD700',
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
+    cardName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+        marginBottom: 16,
+    },
+    cardFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    confedBadge: {
+        backgroundColor: '#1E293B',
+        color: '#94A3B8',
+        fontSize: 10,
+        fontWeight: '700',
+        borderRadius: 6,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        borderWidth: 1,
+        borderColor: '#334155',
+    },
+    teamIdCode: {
+        color: '#475569',
+        fontSize: 12,
+        fontWeight: '700',
+    },
+    emptyContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 64,
+        backgroundColor: '#151E33',
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#22335C',
+        marginTop: 16,
+    },
+    emptyIcon: {
+        fontSize: 48,
+        marginBottom: 16,
+        opacity: 0.5,
+    },
+    emptyTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+        marginBottom: 8,
+    },
+    emptySubtitle: {
+        fontSize: 14,
+        color: '#94A3B8',
+        textAlign: 'center',
+        paddingHorizontal: 24,
+    },
+});
