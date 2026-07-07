@@ -1,6 +1,6 @@
 import { Platform, StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+export const teamsStyles = StyleSheet.create({
     screen: {
         flex: 1,
     },
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         color: '#FFFFFF',
         fontSize: 16,
-        outlineStyle: 'none', // For web to remove default border highlight
+        outlineStyle: 'none',
     } as any,
     clearButton: {
         padding: 8,
@@ -84,7 +84,7 @@ export const styles = StyleSheet.create({
         }) as any,
     },
     filterButtonActive: {
-        backgroundColor: '#00E676', // Pitch Green for filtering
+        backgroundColor: '#00E676',
         borderColor: '#00E676',
     },
     filterButtonText: {
@@ -133,16 +133,11 @@ export const styles = StyleSheet.create({
         minWidth: 220,
         flexGrow: 1,
         flexShrink: 1,
-        flexBasis: '22%', // Roughly 4 cards per row on large screens
+        flexBasis: '22%',
         ...Platform.select({
             web: {
                 transitionProperty: 'transform, border-color, box-shadow',
                 transitionDuration: '0.2s',
-                ':hover': {
-                    transform: 'translateY(-4px)',
-                    borderColor: '#FFD700',
-                    boxShadow: '0 10px 15px -3px rgba(255, 215, 0, 0.15)',
-                },
             },
         }) as any,
     },

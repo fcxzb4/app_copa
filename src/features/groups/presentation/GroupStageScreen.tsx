@@ -1,7 +1,8 @@
-import { styles } from '@/presentation/components/group_stage_styles';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { calculateGroupStandings, matches, Team, teams } from '../data/worldCupData';
+import { calculateGroupStandings, matches, teams } from '../../../shared/data/worldCupData';
+import type { Team } from '../../teams/domain/entities/Team';
+import { groupStageStyles as styles } from './styles/groupStageStyles';
 
 type SubTab = 'groups' | 'tables' | 'last_matches' | 'next_matches';
 
@@ -67,9 +68,6 @@ export default function GroupStageScreen() {
 
                             {/* Table Body Rows */}
                             {standings.map((row, idx) => {
-                                // Style based on qualification position
-                                // Top 2: Direct Qualification (Green badge style)
-                                // 3rd place: Potential Qualification (Yellow badge style)
                                 let posStyle = styles.posGeneral;
                                 if (idx < 2) {
                                     posStyle = styles.posQualified;
@@ -130,7 +128,6 @@ export default function GroupStageScreen() {
             );
         }
 
-        // Sort: completed matches by date descending, upcoming by date ascending
         const sortedMatches = [...filteredMatches].sort((a, b) => {
             const parseDate = (dStr: string) => {
                 const [day, month, year] = dStr.split('/').map(Number);
@@ -266,4 +263,3 @@ export default function GroupStageScreen() {
         </View>
     );
 }
-

@@ -1,6 +1,6 @@
 import { Platform, StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+export const groupStageStyles = StyleSheet.create({
     screen: {
         flex: 1,
     },
@@ -207,13 +207,13 @@ export const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
     posQualified: {
-        backgroundColor: '#10B981', // green for top 2
+        backgroundColor: '#10B981',
     },
     posPlayoff: {
-        backgroundColor: '#D4AF37', // gold/yellow for 3rd
+        backgroundColor: '#D4AF37',
     },
     posGeneral: {
-        backgroundColor: '#475569', // grey for 4th
+        backgroundColor: '#475569',
     },
     teamFlag: {
         fontSize: 20,
@@ -333,7 +333,7 @@ export const styles = StyleSheet.create({
         fontSize: 24,
     },
     winnerBold: {
-        color: '#FFD700', // Highlight winner name
+        color: '#FFD700',
         fontWeight: 'bold',
     },
     scoreContainer: {
@@ -360,7 +360,7 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
     },
     winnerScore: {
-        color: '#FFD700', // Highlight winner score
+        color: '#FFD700',
     },
     scoreDivider: {
         color: '#64748B',

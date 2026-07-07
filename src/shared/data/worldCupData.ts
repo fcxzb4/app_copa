@@ -1,4 +1,6 @@
-import type { Team, Match, Standing, Confederation } from '../domain/entities/all_entities';
+import type { Team } from '../../features/teams/domain/entities/Team';
+import type { Match } from '../../features/groups/domain/entities/Match';
+import type { Standing } from '../../features/groups/domain/entities/Standing';
 
 export const teams: Team[] = [
   // Group A
@@ -94,7 +96,7 @@ export const matches: Match[] = [
   // --- Grupo C ---
   { id: 'C1', group: 'C', homeTeamId: 'BRA', awayTeamId: 'MAR', homeScore: 2, awayScore: 2, date: '13/06/2026', time: '16:00', stadium: 'SoFi Stadium, Los Angeles', status: 'completed' },
   { id: 'C2', group: 'C', homeTeamId: 'HAI', awayTeamId: 'SCO', homeScore: 0, awayScore: 4, date: '14/06/2026', time: '18:00', stadium: 'Hard Rock Stadium, Miami', status: 'completed' },
-  { id: 'C3', group: 'C', homeTeamId: 'BRA', awayTeamId: 'HAI', homeScore: 5, awayScore: 0, date: '19/06/2026', time: '21:00', stadium: 'Levi\'s Stadium, São Francisco', status: 'completed' },
+  { id: 'C3', group: 'C', homeTeamId: 'BRA', awayTeamId: 'HAI', homeScore: 5, awayScore: 0, date: '19/06/2026', time: '21:00', stadium: "Levi's Stadium, São Francisco", status: 'completed' },
   { id: 'C4', group: 'C', homeTeamId: 'SCO', awayTeamId: 'MAR', homeScore: 1, awayScore: 3, date: '20/06/2026', time: '14:00', stadium: 'NRG Stadium, Houston', status: 'completed' },
   { id: 'C5', group: 'C', homeTeamId: 'SCO', awayTeamId: 'BRA', date: '26/06/2026', time: '20:00', stadium: 'MetLife Stadium, Nova Jersey', status: 'upcoming' },
   { id: 'C6', group: 'C', homeTeamId: 'MAR', awayTeamId: 'HAI', date: '26/06/2026', time: '20:00', stadium: 'Mercedes-Benz Stadium, Atlanta', status: 'upcoming' },
@@ -111,7 +113,7 @@ export const matches: Match[] = [
   { id: 'E1', group: 'E', homeTeamId: 'GER', awayTeamId: 'CUW', homeScore: 4, awayScore: 1, date: '14/06/2026', time: '15:00', stadium: 'Lincoln Financial Field, Filadélfia', status: 'completed' },
   { id: 'E2', group: 'E', homeTeamId: 'CIV', awayTeamId: 'ECU', homeScore: 1, awayScore: 2, date: '14/06/2026', time: '19:00', stadium: 'BMO Field, Toronto', status: 'completed' },
   { id: 'E3', group: 'E', homeTeamId: 'GER', awayTeamId: 'CIV', homeScore: 2, awayScore: 0, date: '20/06/2026', time: '16:00', stadium: 'MetLife Stadium, Nova Jersey', status: 'completed' },
-  { id: 'E4', group: 'E', homeTeamId: 'ECU', awayTeamId: 'CUW', homeScore: 3, awayScore: 1, date: '20/06/2026', time: '20:00', stadium: 'Levi\'s Stadium, São Francisco', status: 'completed' },
+  { id: 'E4', group: 'E', homeTeamId: 'ECU', awayTeamId: 'CUW', homeScore: 3, awayScore: 1, date: '20/06/2026', time: '20:00', stadium: "Levi's Stadium, São Francisco", status: 'completed' },
   { id: 'E5', group: 'E', homeTeamId: 'ECU', awayTeamId: 'GER', date: '26/06/2026', time: '14:00', stadium: 'Hard Rock Stadium, Miami', status: 'upcoming' },
   { id: 'E6', group: 'E', homeTeamId: 'CUW', awayTeamId: 'CIV', date: '26/06/2026', time: '14:00', stadium: 'BC Place, Vancouver', status: 'upcoming' },
 
@@ -133,7 +135,7 @@ export const matches: Match[] = [
 
   // --- Grupo H ---
   { id: 'H1', group: 'H', homeTeamId: 'ESP', awayTeamId: 'CPV', homeScore: 3, awayScore: 0, date: '16/06/2026', time: '15:00', stadium: 'Estádio Azteca, Cidade do México', status: 'completed' },
-  { id: 'H2', group: 'H', homeTeamId: 'KSA', awayTeamId: 'URU', homeScore: 0, awayScore: 2, date: '16/06/2026', time: '18:00', stadium: 'Levi\'s Stadium, São Francisco', status: 'completed' },
+  { id: 'H2', group: 'H', homeTeamId: 'KSA', awayTeamId: 'URU', homeScore: 0, awayScore: 2, date: '16/06/2026', time: '18:00', stadium: "Levi's Stadium, São Francisco", status: 'completed' },
   { id: 'H3', group: 'H', homeTeamId: 'ESP', awayTeamId: 'KSA', homeScore: 4, awayScore: 1, date: '22/06/2026', time: '17:00', stadium: 'NRG Stadium, Houston', status: 'completed' },
   { id: 'H4', group: 'H', homeTeamId: 'URU', awayTeamId: 'CPV', homeScore: 2, awayScore: 1, date: '22/06/2026', time: '20:00', stadium: 'MetLife Stadium, Nova Jersey', status: 'completed' },
   { id: 'H5', group: 'H', homeTeamId: 'URU', awayTeamId: 'ESP', date: '28/06/2026', time: '18:00', stadium: 'Mercedes-Benz Stadium, Atlanta', status: 'upcoming' },
@@ -153,7 +155,7 @@ export const matches: Match[] = [
   { id: 'J3', group: 'J', homeTeamId: 'ARG', awayTeamId: 'AUT', homeScore: 1, awayScore: 0, date: '23/06/2026', time: '19:00', stadium: 'MetLife Stadium, Nova Jersey', status: 'completed' },
   { id: 'J4', group: 'J', homeTeamId: 'JOR', awayTeamId: 'ALG', homeScore: 1, awayScore: 2, date: '24/06/2026', time: '13:00', stadium: 'Hard Rock Stadium, Miami', status: 'completed' },
   { id: 'J5', group: 'J', homeTeamId: 'JOR', awayTeamId: 'ARG', date: '29/06/2026', time: '16:00', stadium: 'Estádio Azteca, Cidade do México', status: 'upcoming' },
-  { id: 'J6', group: 'J', homeTeamId: 'ALG', awayTeamId: 'AUT', date: '29/06/2026', time: '16:00', stadium: 'Levi\'s Stadium, São Francisco', status: 'upcoming' },
+  { id: 'J6', group: 'J', homeTeamId: 'ALG', awayTeamId: 'AUT', date: '29/06/2026', time: '16:00', stadium: "Levi's Stadium, São Francisco", status: 'upcoming' },
 
   // --- Grupo K ---
   { id: 'K1', group: 'K', homeTeamId: 'POR', awayTeamId: 'UZB', homeScore: 3, awayScore: 1, date: '18/06/2026', time: '21:00', stadium: 'AT&T Stadium, Dallas', status: 'completed' },
@@ -178,7 +180,6 @@ export function calculateGroupStandings(groupLetter: string): Standing[] {
 
   const standingsMap: Record<string, Omit<Standing, 'team'>> = {};
 
-  // Initialize
   groupTeams.forEach(team => {
     standingsMap[team.id] = {
       teamId: team.id,
@@ -193,7 +194,6 @@ export function calculateGroupStandings(groupLetter: string): Standing[] {
     };
   });
 
-  // Calculate from matches
   groupMatches.forEach(match => {
     const { homeTeamId, awayTeamId, homeScore, awayScore } = match;
     if (homeScore === undefined || awayScore === undefined) return;
@@ -230,26 +230,15 @@ export function calculateGroupStandings(groupLetter: string): Standing[] {
     }
   });
 
-  // Map back to include Team object and convert to array
   const standings: Standing[] = Object.values(standingsMap).map(s => {
     const team = groupTeams.find(t => t.id === s.teamId)!;
-    return {
-      ...s,
-      team,
-    };
+    return { ...s, team };
   });
 
-  // Sort by Points, Goal Difference, Goals For, Team Name
   return standings.sort((a, b) => {
-    if (b.points !== a.points) {
-      return b.points - a.points;
-    }
-    if (b.goalDifference !== a.goalDifference) {
-      return b.goalDifference - a.goalDifference;
-    }
-    if (b.goalsFor !== a.goalsFor) {
-      return b.goalsFor - a.goalsFor;
-    }
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+    if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
     return a.team.name.localeCompare(b.team.name);
   });
 }

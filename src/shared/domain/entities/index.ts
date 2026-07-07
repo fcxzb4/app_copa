@@ -1,4 +1,10 @@
+/**
+ * Tipos compartilhados entre features.
+ * Apenas tipos verdadeiramente globais devem estar aqui.
+ */
+
 export type Confederation = 'UEFA' | 'CONMEBOL' | 'CONCACAF' | 'CAF' | 'AFC' | 'OFC';
+
 
 export interface Team {
     id: string;

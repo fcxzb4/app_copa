@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import type { Confederation } from '../data/worldCupData';
-import { teams } from '../data/worldCupData';
-import { styles } from "../presentation/components/teams_screen_tyles";
+import { confederationsList } from '../../../shared/data/confederations';
+import { teams } from '../../../shared/data/worldCupData';
+import type { Confederation } from '../../../shared/domain/entities';
+import { teamsStyles as styles } from './styles/teamsStyles';
 
 export default function TeamsScreen() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,16 +15,6 @@ export default function TeamsScreen() {
     const matchesConfed = selectedConfed === 'ALL' || team.confederation === selectedConfed;
     return matchesSearch && matchesConfed;
   });
-
-  const confederationsList: { key: Confederation | 'ALL'; label: string; desc: string }[] = [
-    { key: 'ALL', label: 'Todos', desc: 'Todas as federações' },
-    { key: 'UEFA', label: 'UEFA', desc: 'Europa' },
-    { key: 'CONMEBOL', label: 'CONMEBOL', desc: 'América do Sul' },
-    { key: 'CONCACAF', label: 'CONCACAF', desc: 'América do Norte/Central' },
-    { key: 'CAF', label: 'CAF', desc: 'África' },
-    { key: 'AFC', label: 'AFC', desc: 'Ásia' },
-    { key: 'OFC', label: 'OFC', desc: 'Oceania' },
-  ];
 
   return (
     <View style={styles.screen}>
@@ -60,22 +51,13 @@ export default function TeamsScreen() {
             return (
               <TouchableOpacity
                 key={confed.key}
-                style={[
-                  styles.filterButton,
-                  isActive && styles.filterButtonActive
-                ]}
+                style={[styles.filterButton, isActive && styles.filterButtonActive]}
                 onPress={() => setSelectedConfed(confed.key)}
               >
-                <Text style={[
-                  styles.filterButtonText,
-                  isActive && styles.filterButtonTextActive
-                ]}>
+                <Text style={[styles.filterButtonText, isActive && styles.filterButtonTextActive]}>
                   {confed.label}
                 </Text>
-                <Text style={[
-                  styles.filterButtonDesc,
-                  isActive && styles.filterButtonDescActive
-                ]}>
+                <Text style={[styles.filterButtonDesc, isActive && styles.filterButtonDescActive]}>
                   {confed.desc}
                 </Text>
               </TouchableOpacity>
@@ -122,4 +104,3 @@ export default function TeamsScreen() {
     </View>
   );
 }
-
