@@ -9,7 +9,7 @@ export default function RootLayout() {
   const styles = layoutStyles;
   const pathname = usePathname();
   const isGroupStage = pathname === '/' || pathname === '/index';
-  const isTeams = pathname === '/teams';
+  const isTeams = pathname === '/team';
 
   return (
     <SafeAreaProvider>
@@ -37,7 +37,7 @@ export default function RootLayout() {
                   Fase de Grupos
                 </Text>
               </Link>
-              <Link href={"/teams" as any} asChild>
+              <Link href={"/team" as any} asChild>
                 <Text style={StyleSheet.flatten([
                   styles.navItem,
                   isTeams && styles.navItemActive
