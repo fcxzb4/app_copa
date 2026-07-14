@@ -1,14 +1,17 @@
-import { Link, Slot, usePathname } from 'expo-router';
+import { Link, Slot, usePathname, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { layoutStyles } from '../shared/presentation/components/layout/layoutStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { AuthProvider, useAuth } from '../features/auth/presentation/AuthContext';
 
-export default function RootLayout() {
+function AppContent() {
   const styles = layoutStyles;
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, isLoggedIn } = useAuth();
 
   // Check active routes
   const isHome = pathname === '/' || pathname === '/index';
@@ -16,6 +19,7 @@ export default function RootLayout() {
   const isTeams = pathname === '/teams';
   const isStickers = pathname === '/sticker';
   const isBets = pathname === '/bets';
+  const isProfile = pathname === '/profile';
 
   const handleHamburgerPress = () => {
     Alert.alert('Menu', 'Funcionalidade de menu lateral disponível em breve!');
@@ -37,11 +41,16 @@ export default function RootLayout() {
               <Text style={styles.title}>Popular da Copa</Text>
             </View>
 
-            <TouchableOpacity 
-              style={styles.avatarContainer}
-              onPress={() => Alert.alert('Perfil', 'Configurações de perfil em breve!')}
+            <TouchableOpacity
+              style={[
+                styles.avatarContainer,
+                isProfile && { borderColor: '#FACC15' },
+              ]}
+              onPress={() => router.push('/profile' as any)}
             >
-              <Text style={styles.avatarEmoji}>👤</Text>
+              <Text style={styles.avatarEmoji}>
+                {isLoggedIn && user ? user.avatarEmoji : '👤'}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -144,5 +153,13 @@ export default function RootLayout() {
 
       </SafeAreaView>
     </SafeAreaProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

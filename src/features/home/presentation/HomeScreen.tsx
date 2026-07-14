@@ -26,7 +26,7 @@ export default function HomeScreen() {
             {/* Card 1: BRA x ARG */}
             <View style={styles.liveCard}>
               <View style={styles.liveCardHeader}>
-                <Text style={styles.liveCardPhase}>Fase de Grupos • 82'</Text>
+                <Text style={styles.liveCardPhase}>{"Fase de Grupos • 82'"}</Text>
                 <View style={styles.liveBadge}>
                   <Text style={styles.liveBadgeText}>● AO VIVO</Text>
                 </View>
@@ -52,7 +52,7 @@ export default function HomeScreen() {
             {/* Card 2: FRA x GER */}
             <View style={styles.liveCard}>
               <View style={styles.liveCardHeader}>
-                <Text style={styles.liveCardPhase}>Fase de Grupos • 45'</Text>
+                <Text style={styles.liveCardPhase}>{"Fase de Grupos • 45'"}</Text>
                 <View style={[styles.liveBadge, { backgroundColor: '#475569' }]}>
                   <Text style={styles.liveBadgeText}>Intervalo</Text>
                 </View>
