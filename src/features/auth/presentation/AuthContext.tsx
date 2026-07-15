@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    updateProfile,
+} from 'firebase/auth';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../../../../firebaseConfig';
 import type { User } from '../domain/entities/User';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -6,80 +15,194 @@ import type { User } from '../domain/entities/User';
 interface AuthContextData {
     user: User | null;
     isLoggedIn: boolean;
+    isLoading: boolean;
     login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
     register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const AVATAR_EMOJIS = ['⚽', '🏆', '🥇', '🎯', '🌟', '🦁', '🦅', '🌍'];
 
+const randomEmoji = () => AVATAR_EMOJIS[Math.floor(Math.random() * AVATAR_EMOJIS.length)];
+
+/**
+ * Verifica se o erro tem formato de erro do Firebase (duck-typing).
+ * Necessário pois `instanceof FirebaseError` não funciona no Hermes (React Native).
+ */
+function isFirebaseError(err: unknown): err is { code: string; message: string } {
+    return (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        typeof (err as any).code === 'string'
+    );
+}
+
+/**
+ * Traduz os códigos de erro do Firebase Auth para português.
+ */
+function mapFirebaseError(code: string): string {
+    switch (code) {
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential':
+            return 'E-mail ou senha incorretos.';
+        case 'auth/email-already-in-use':
+            return 'Este e-mail já está cadastrado.';
+        case 'auth/weak-password':
+            return 'A senha deve ter pelo menos 6 caracteres.';
+        case 'auth/invalid-email':
+            return 'E-mail inválido.';
+        case 'auth/too-many-requests':
+            return 'Muitas tentativas. Tente novamente mais tarde.';
+        case 'auth/network-request-failed':
+            return 'Sem conexão com a internet.';
+        default:
+            return 'Ocorreu um erro. Tente novamente.';
+    }
+}
+
+// ─── Provider ─────────────────────────────────────────────────────────────────
+
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true); // aguarda onAuthStateChanged na inicialização
 
     /**
-     * Simula um login sem banco de dados.
-     * Em produção, aqui seria feita uma chamada de API.
+     * Escuta mudanças de autenticação no Firebase.
+     * Ao iniciar, verifica se há sessão salva (via AsyncStorage persistence).
+     */
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                // Busca dados extras do Firestore (username, avatarEmoji, etc.)
+                try {
+                    const docRef = doc(db, 'users', firebaseUser.uid);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        setUser({
+                            id: firebaseUser.uid,
+                            username: data.username ?? firebaseUser.displayName ?? firebaseUser.email!.split('@')[0],
+                            email: firebaseUser.email!,
+                            avatarEmoji: data.avatarEmoji ?? '⚽',
+                            stickerCount: data.stickerCount ?? 0,
+                            joinedAt: data.joinedAt ?? new Date().toLocaleDateString('pt-BR'),
+                        });
+                    } else {
+                        // Fallback: usuário no Auth mas sem documento no Firestore
+                        setUser({
+                            id: firebaseUser.uid,
+                            username: firebaseUser.displayName ?? firebaseUser.email!.split('@')[0],
+                            email: firebaseUser.email!,
+                            avatarEmoji: '⚽',
+                            stickerCount: 0,
+                            joinedAt: new Date().toLocaleDateString('pt-BR'),
+                        });
+                    }
+                } catch {
+                    // Em caso de erro ao buscar Firestore, usa dados mínimos do Auth
+                    setUser({
+                        id: firebaseUser.uid,
+                        username: firebaseUser.displayName ?? firebaseUser.email!.split('@')[0],
+                        email: firebaseUser.email!,
+                        avatarEmoji: '⚽',
+                        stickerCount: 0,
+                        joinedAt: new Date().toLocaleDateString('pt-BR'),
+                    });
+                }
+            } else {
+                setUser(null);
+            }
+            setIsLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    /**
+     * Login com e-mail e senha via Firebase Authentication.
      */
     const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-        // Validações básicas de campo
         if (!email.trim()) return { success: false, error: 'Informe o e-mail.' };
         if (!password.trim()) return { success: false, error: 'Informe a senha.' };
-        if (password.length < 6) return { success: false, error: 'Senha deve ter ao menos 6 caracteres.' };
         if (!email.includes('@')) return { success: false, error: 'E-mail inválido.' };
 
-        // Simulando delay de rede
-        await new Promise(resolve => setTimeout(resolve, 800));
-
-        // Cria um usuário "logado" fictício
-        const username = email.split('@')[0];
-        const mockUser: User = {
-            id: Math.random().toString(36).slice(2),
-            username,
-            email,
-            avatarEmoji: AVATAR_EMOJIS[Math.floor(Math.random() * AVATAR_EMOJIS.length)],
-            stickerCount: Math.floor(Math.random() * 120) + 10,
-            joinedAt: new Date().toLocaleDateString('pt-BR'),
-        };
-
-        setUser(mockUser);
-        return { success: true };
+        try {
+            await signInWithEmailAndPassword(auth, email.trim(), password);
+            // onAuthStateChanged cuidará de atualizar o estado do usuário
+            return { success: true };
+        } catch (err) {
+            if (isFirebaseError(err)) {
+                return { success: false, error: mapFirebaseError(err.code) };
+            }
+            return { success: false, error: 'Erro inesperado. Tente novamente.' };
+        }
     };
 
     /**
-     * Simula um cadastro sem banco de dados.
+     * Cadastro com e-mail e senha via Firebase Authentication.
+     * Também cria um documento no Firestore com dados extras do usuário.
      */
-    const register = async (username: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const register = async (
+        username: string,
+        email: string,
+        password: string,
+    ): Promise<{ success: boolean; error?: string }> => {
         if (!username.trim()) return { success: false, error: 'Informe o nome de usuário.' };
-        if (username.length < 3) return { success: false, error: 'Username deve ter ao menos 3 caracteres.' };
+        if (username.trim().length < 3) return { success: false, error: 'Username deve ter ao menos 3 caracteres.' };
         if (!email.trim() || !email.includes('@')) return { success: false, error: 'E-mail inválido.' };
         if (!password.trim()) return { success: false, error: 'Informe a senha.' };
-        if (password.length < 6) return { success: false, error: 'Senha deve ter ao menos 6 caracteres.' };
+        if (password.length < 6) return { success: false, error: 'A senha deve ter ao menos 6 caracteres.' };
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+            // 1. Cria o usuário no Firebase Authentication
+            const userCredential = await createUserWithEmailAndPassword(auth, email.trim(), password);
+            const firebaseUser = userCredential.user;
 
-        const newUser: User = {
-            id: Math.random().toString(36).slice(2),
-            username,
-            email,
-            avatarEmoji: AVATAR_EMOJIS[Math.floor(Math.random() * AVATAR_EMOJIS.length)],
-            stickerCount: 0,
-            joinedAt: new Date().toLocaleDateString('pt-BR'),
-        };
+            // 2. Atualiza o displayName do usuário no Auth
+            await updateProfile(firebaseUser, { displayName: username.trim() });
 
-        setUser(newUser);
-        return { success: true };
+            // 3. Persiste dados extras no Firestore
+            const avatarEmoji = randomEmoji();
+            const joinedAt = new Date().toLocaleDateString('pt-BR');
+
+            await setDoc(doc(db, 'users', firebaseUser.uid), {
+                username: username.trim(),
+                email: email.trim(),
+                avatarEmoji,
+                stickerCount: 0,
+                joinedAt,
+                createdAt: new Date().toISOString(),
+            });
+
+            // onAuthStateChanged cuidará de atualizar o estado do usuário
+            return { success: true };
+        } catch (err) {
+            if (isFirebaseError(err)) {
+                return { success: false, error: mapFirebaseError(err.code) };
+            }
+            return { success: false, error: 'Erro inesperado. Tente novamente.' };
+        }
     };
 
-    const logout = () => setUser(null);
+    /**
+     * Desloga o usuário do Firebase Auth.
+     */
+    const logout = async (): Promise<void> => {
+        await signOut(auth);
+        // onAuthStateChanged irá setar user para null automaticamente
+    };
 
     return (
-        <AuthContext.Provider value={{ user, isLoggedIn: !!user, login, register, logout }}>
+        <AuthContext.Provider value={{ user, isLoggedIn: !!user, isLoading, login, register, logout }}>
             {children}
         </AuthContext.Provider>
     );

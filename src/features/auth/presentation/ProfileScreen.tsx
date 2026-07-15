@@ -19,8 +19,8 @@ function LoggedInProfile() {
                 { text: 'Cancelar', style: 'cancel' },
                 {
                     text: 'Sair', style: 'destructive',
-                    onPress: () => {
-                        logout();
+                    onPress: async () => {
+                        await logout();
                     },
                 },
             ]
