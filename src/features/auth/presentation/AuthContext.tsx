@@ -5,10 +5,11 @@ import {
     signOut,
     onAuthStateChanged,
     updateProfile,
+    deleteUser,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../../../firebaseConfig';
-import type { User } from '../domain/entities/User';
+import type { User, FigurinhaEspecial } from '../domain/entities/User';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -17,7 +18,13 @@ interface AuthContextData {
     isLoggedIn: boolean;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-    register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+    register: (
+        username: string,
+        email: string,
+        password: string,
+        stickerCount: number,
+        figurinha: FigurinhaEspecial
+    ) => Promise<{ success: boolean; error?: string }>;
     logout: () => Promise<void>;
 }
 
@@ -95,6 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             avatarEmoji: data.avatarEmoji ?? '⚽',
                             stickerCount: data.stickerCount ?? 0,
                             joinedAt: data.joinedAt ?? new Date().toLocaleDateString('pt-BR'),
+                            figurinha: data.figurinha,
                         });
                     } else {
                         // Fallback: usuário no Auth mas sem documento no Firestore
@@ -155,41 +163,69 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         username: string,
         email: string,
         password: string,
+        stickerCount: number,
+        figurinha: FigurinhaEspecial,
     ): Promise<{ success: boolean; error?: string }> => {
         if (!username.trim()) return { success: false, error: 'Informe o nome de usuário.' };
         if (username.trim().length < 3) return { success: false, error: 'Username deve ter ao menos 3 caracteres.' };
         if (!email.trim() || !email.includes('@')) return { success: false, error: 'E-mail inválido.' };
         if (!password.trim()) return { success: false, error: 'Informe a senha.' };
         if (password.length < 6) return { success: false, error: 'A senha deve ter ao menos 6 caracteres.' };
+        if (isNaN(stickerCount) || stickerCount < 0) return { success: false, error: 'Quantidade de figurinhas inválida.' };
+
+        let createdFirebaseUser: any = null;
 
         try {
             // 1. Cria o usuário no Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email.trim(), password);
-            const firebaseUser = userCredential.user;
+            createdFirebaseUser = userCredential.user;
 
             // 2. Atualiza o displayName do usuário no Auth
-            await updateProfile(firebaseUser, { displayName: username.trim() });
+            await updateProfile(createdFirebaseUser, { displayName: username.trim() });
 
             // 3. Persiste dados extras no Firestore
             const avatarEmoji = randomEmoji();
             const joinedAt = new Date().toLocaleDateString('pt-BR');
 
-            await setDoc(doc(db, 'users', firebaseUser.uid), {
+            await setDoc(doc(db, 'users', createdFirebaseUser.uid), {
                 username: username.trim(),
                 email: email.trim(),
                 avatarEmoji,
-                stickerCount: 0,
+                stickerCount: Number(stickerCount),
                 joinedAt,
                 createdAt: new Date().toISOString(),
+                figurinha: {
+                    Jogador: figurinha.Jogador.trim(),
+                    Seleção: figurinha.Seleção.trim(),
+                    Pais: figurinha.Pais.trim(),
+                    Posição: figurinha.Posição.trim(),
+                },
             });
 
-            // onAuthStateChanged cuidará de atualizar o estado do usuário
             return { success: true };
         } catch (err) {
+            console.error('Erro detalhado no registro de usuário:', err);
+
+            // Se o erro ocorreu após a criação do usuário no Authentication (ex: falha no Firestore),
+            // deletamos o usuário recém-criado para evitar conta orfã (sem doc no Firestore)
+            if (createdFirebaseUser) {
+                try {
+                    console.log('Realizando rollback: deletando conta criada no Auth devido a falha no Firestore...');
+                    await deleteUser(createdFirebaseUser);
+                    console.log('Rollback concluído com sucesso.');
+                } catch (rollbackErr) {
+                    console.error('Falha crítica ao tentar deletar conta órfã no Auth:', rollbackErr);
+                }
+            }
+
             if (isFirebaseError(err)) {
+                // Mensagem personalizada caso seja permissão negada no Firestore
+                if (err.code === 'permission-denied') {
+                    return { success: false, error: 'Permissão negada no Firestore. Verifique as regras de segurança.' };
+                }
                 return { success: false, error: mapFirebaseError(err.code) };
             }
-            return { success: false, error: 'Erro inesperado. Tente novamente.' };
+            return { success: false, error: 'Erro inesperado ao criar conta. Tente novamente.' };
         }
     };
 

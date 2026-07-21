@@ -11,6 +11,11 @@ export default function RegisterScreen() {
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
+    const [figurinhas, setFigurinhas] = useState('');
+    const [jogador, setJogador] = useState('');
+    const [selecao, setSelecao] = useState('');
+    const [pais, setPais] = useState('');
+    const [posicao, setPosicao] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +23,11 @@ export default function RegisterScreen() {
 
     const [usernameFocused, setUsernameFocused] = useState(false);
     const [emailFocused, setEmailFocused] = useState(false);
+    const [figurinhasFocused, setFigurinhasFocused] = useState(false);
+    const [jogadorFocused, setJogadorFocused] = useState(false);
+    const [selecaoFocused, setSelecaoFocused] = useState(false);
+    const [paisFocused, setPaisFocused] = useState(false);
+    const [posicaoFocused, setPosicaoFocused] = useState(false);
     const [passFocused, setPassFocused] = useState(false);
     const [confirmFocused, setConfirmFocused] = useState(false);
 
@@ -27,13 +37,52 @@ export default function RegisterScreen() {
     const handleRegister = async () => {
         setError(null);
 
+        if (figurinhas.trim() === '') {
+            setError('Informe a quantidade inicial de figurinhas.');
+            return;
+        }
+
+        const stickerNum = Number(figurinhas);
+        if (isNaN(stickerNum) || stickerNum < 0) {
+            setError('A quantidade de figurinhas deve ser um número maior ou igual a zero.');
+            return;
+        }
+
+        if (!jogador.trim()) {
+            setError('Informe o nome do jogador da sua figurinha especial.');
+            return;
+        }
+        if (!selecao.trim()) {
+            setError('Informe a seleção da sua figurinha especial.');
+            return;
+        }
+        if (!pais.trim()) {
+            setError('Informe o país de nascimento do jogador.');
+            return;
+        }
+        if (!posicao.trim()) {
+            setError('Informe a posição do jogador (ex: Goleiro, Atacante).');
+            return;
+        }
+
         if (password !== confirmPassword) {
             setError('As senhas não coincidem.');
             return;
         }
 
         setLoading(true);
-        const result = await register(username.trim(), email.trim(), password);
+        const result = await register(
+            username.trim(), 
+            email.trim(), 
+            password, 
+            stickerNum,
+            {
+                Jogador: jogador.trim(),
+                Seleção: selecao.trim(),
+                Pais: pais.trim(),
+                Posição: posicao.trim(),
+            }
+        );
         setLoading(false);
 
         if (result.success) {
@@ -125,6 +174,122 @@ export default function RegisterScreen() {
                             keyboardType="email-address"
                             autoCapitalize="none"
                             autoComplete="email"
+                            returnKeyType="next"
+                        />
+                    </View>
+
+                    {/* Figurinhas */}
+                    <View style={[
+                        styles.inputWrapper,
+                        figurinhasFocused && styles.inputWrapperFocused,
+                    ]}>
+                        <Ionicons
+                            name="albums-outline"
+                            size={18}
+                            color={figurinhasFocused ? '#4ADE80' : '#4A6741'}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Quantidade de figurinhas"
+                            placeholderTextColor="#4A6741"
+                            value={figurinhas}
+                            onChangeText={setFigurinhas}
+                            onFocus={() => setFigurinhasFocused(true)}
+                            onBlur={() => setFigurinhasFocused(false)}
+                            keyboardType="number-pad"
+                            returnKeyType="next"
+                        />
+                    </View>
+
+                    {/* Seção Figurinha Especial */}
+                    <Text style={{ color: '#8CA185', fontSize: 13, fontWeight: '600', marginTop: 12, marginBottom: 4, marginLeft: 4 }}>
+                        Figurinha Especial
+                    </Text>
+
+                    {/* Jogador */}
+                    <View style={[
+                        styles.inputWrapper,
+                        jogadorFocused && styles.inputWrapperFocused,
+                    ]}>
+                        <Ionicons
+                            name="person-outline"
+                            size={18}
+                            color={jogadorFocused ? '#4ADE80' : '#4A6741'}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Jogador da figurinha"
+                            placeholderTextColor="#4A6741"
+                            value={jogador}
+                            onChangeText={setJogador}
+                            onFocus={() => setJogadorFocused(true)}
+                            onBlur={() => setJogadorFocused(false)}
+                            returnKeyType="next"
+                        />
+                    </View>
+
+                    {/* Seleção */}
+                    <View style={[
+                        styles.inputWrapper,
+                        selecaoFocused && styles.inputWrapperFocused,
+                    ]}>
+                        <Ionicons
+                            name="flag-outline"
+                            size={18}
+                            color={selecaoFocused ? '#4ADE80' : '#4A6741'}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Seleção (Time)"
+                            placeholderTextColor="#4A6741"
+                            value={selecao}
+                            onChangeText={setSelecao}
+                            onFocus={() => setSelecaoFocused(true)}
+                            onBlur={() => setSelecaoFocused(false)}
+                            returnKeyType="next"
+                        />
+                    </View>
+
+                    {/* Pais */}
+                    <View style={[
+                        styles.inputWrapper,
+                        paisFocused && styles.inputWrapperFocused,
+                    ]}>
+                        <Ionicons
+                            name="earth-outline"
+                            size={18}
+                            color={paisFocused ? '#4ADE80' : '#4A6741'}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="País de origem"
+                            placeholderTextColor="#4A6741"
+                            value={pais}
+                            onChangeText={setPais}
+                            onFocus={() => setPaisFocused(true)}
+                            onBlur={() => setPaisFocused(false)}
+                            returnKeyType="next"
+                        />
+                    </View>
+
+                    {/* Posição */}
+                    <View style={[
+                        styles.inputWrapper,
+                        posicaoFocused && styles.inputWrapperFocused,
+                    ]}>
+                        <Ionicons
+                            name="football-outline"
+                            size={18}
+                            color={posicaoFocused ? '#4ADE80' : '#4A6741'}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Posição (ex: Atacante)"
+                            placeholderTextColor="#4A6741"
+                            value={posicao}
+                            onChangeText={setPosicao}
+                            onFocus={() => setPosicaoFocused(true)}
+                            onBlur={() => setPosicaoFocused(false)}
                             returnKeyType="next"
                         />
                     </View>
