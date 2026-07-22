@@ -1,11 +1,12 @@
 import { Link, Slot, usePathname, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
+import React, { Suspense } from 'react';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { layoutStyles } from '../shared/presentation/components/layout/layoutStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthProvider, useAuth } from '../features/auth/presentation/AuthContext';
+import { DatabaseProvider } from '../shared/data/database/DatabaseProvider';
 
 function AppContent() {
   const styles = layoutStyles;
@@ -156,10 +157,26 @@ function AppContent() {
   );
 }
 
+/** Fallback exibido enquanto o banco SQLite é inicializado */
+function DatabaseLoadingFallback() {
+  return (
+    <SafeAreaProvider>
+      <View style={{ flex: 1, backgroundColor: '#030A06', alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="#4ADE80" />
+        <Text style={{ color: '#8CA185', marginTop: 16, fontSize: 13 }}>Iniciando banco de dados...</Text>
+      </View>
+    </SafeAreaProvider>
+  );
+}
+
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <Suspense fallback={<DatabaseLoadingFallback />}>
+      <DatabaseProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </DatabaseProvider>
+    </Suspense>
   );
 }
