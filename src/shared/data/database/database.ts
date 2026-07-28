@@ -1,10 +1,11 @@
 import { type SQLiteDatabase } from 'expo-sqlite';
+import { runDatabaseSeed } from './seeds/runSeed';
 
 /**
  * Versão atual do schema do banco de dados.
  * Incremente este número sempre que adicionar uma migration.
  */
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 export const DB_NAME = 'popular_copa.db';
 
 /**
@@ -27,10 +28,10 @@ export async function migrateDb(db: SQLiteDatabase): Promise<void> {
     return;
   }
 
-  // ── Migration v1: schema inicial ──────────────────────────────────────────
+  // ── Migration v1: schema inicial de perfil e figurinhas ─────────────────────
   if (currentVersion < 1) {
+    // Cada statement separado para garantir compatibilidade com expo-sqlite v14+
     await db.execAsync(`
-      -- Perfil do usuário local (cache offline)
       CREATE TABLE IF NOT EXISTS user_profile (
         id          INTEGER PRIMARY KEY NOT NULL,
         uid         TEXT    NOT NULL UNIQUE,
@@ -38,15 +39,17 @@ export async function migrateDb(db: SQLiteDatabase): Promise<void> {
         avatar_emoji TEXT   DEFAULT '👤',
         created_at  TEXT    DEFAULT (datetime('now'))
       );
+    `);
 
-      -- Saldo de pacotes de figurinhas
+    await db.execAsync(`
       CREATE TABLE IF NOT EXISTS sticker_packs (
         id              INTEGER PRIMARY KEY NOT NULL,
         packs_remaining INTEGER NOT NULL DEFAULT 5,
         updated_at      TEXT    DEFAULT (datetime('now'))
       );
+    `);
 
-      -- Figurinhas coletadas pelo usuário
+    await db.execAsync(`
       CREATE TABLE IF NOT EXISTS collected_stickers (
         id           INTEGER PRIMARY KEY AUTOINCREMENT,
         sticker_id   TEXT    NOT NULL,
@@ -57,14 +60,54 @@ export async function migrateDb(db: SQLiteDatabase): Promise<void> {
         is_duplicate INTEGER NOT NULL DEFAULT 0,
         collected_at TEXT    DEFAULT (datetime('now'))
       );
-
-      -- Registro inicial de pacotes (garante que sempre existe uma linha)
-      INSERT OR IGNORE INTO sticker_packs (id, packs_remaining) VALUES (1, 5);
     `);
 
-    // Atualiza a versão do schema
+    // Garante que sempre existe uma linha de controle de pacotes
+    await db.execAsync(
+      `INSERT OR IGNORE INTO sticker_packs (id, packs_remaining) VALUES (1, 5);`
+    );
+
     await db.execAsync(`PRAGMA user_version = 1`);
   }
 
-  // ── Migration v2 e posteriores: adicione aqui ──────────────────────────────
+
+  // ── Migration v2: tabelas do torneio (teams, matches) + seeding automático ──
+  if (currentVersion < 2) {
+    // Seleções (Times)
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS teams (
+        id            TEXT PRIMARY KEY NOT NULL,
+        name          TEXT NOT NULL,
+        flag          TEXT NOT NULL,
+        confederation TEXT NOT NULL,
+        group_name    TEXT NOT NULL
+      );
+    `);
+
+    // Partidas (com FK para teams — foreign_keys = ON já foi ativado no início)
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS matches (
+        id           TEXT PRIMARY KEY NOT NULL,
+        group_name   TEXT NOT NULL,
+        home_team_id TEXT NOT NULL,
+        away_team_id TEXT NOT NULL,
+        home_score   INTEGER,
+        away_score   INTEGER,
+        match_date   TEXT NOT NULL,
+        match_time   TEXT NOT NULL,
+        stadium      TEXT NOT NULL,
+        status       TEXT NOT NULL DEFAULT 'upcoming',
+        FOREIGN KEY (home_team_id) REFERENCES teams(id),
+        FOREIGN KEY (away_team_id) REFERENCES teams(id)
+      );
+    `);
+
+    // Povoamento de dados iniciais em lote com transação atômica (BEGIN/COMMIT)
+    await runDatabaseSeed(db);
+
+    // Atualiza a versão do schema para v2
+    await db.execAsync(`PRAGMA user_version = 2`);
+  }
 }
+
+
