@@ -1,15 +1,15 @@
-import { GetTeamsUseCase } from '../GetTeamsUseCase';
-import type { ITeamRepository, TeamFilters } from '../../repositories/ITeamRepository';
-import type { Team } from '../../entities/Team';
+import type { Team } from '../domain/entities/Team';
+import type { ITeamRepository, TeamFilters } from '../domain/repositories/ITeamRepository';
+import { GetTeamsUseCase } from '../domain/usecases/GetTeamsUseCase';
 
 // ── Fixtures ───────────────────────────────────────────────────────────────
 
 const mockTeams: Team[] = [
-    { id: 'BRA', name: 'Brasil',    flag: '🇧🇷', confederation: 'CONMEBOL', group: 'C' },
+    { id: 'BRA', name: 'Brasil', flag: '🇧🇷', confederation: 'CONMEBOL', group: 'C' },
     { id: 'ARG', name: 'Argentina', flag: '🇦🇷', confederation: 'CONMEBOL', group: 'J' },
-    { id: 'GER', name: 'Alemanha',  flag: '🇩🇪', confederation: 'UEFA',     group: 'E' },
-    { id: 'ESP', name: 'Espanha',   flag: '🇪🇸', confederation: 'UEFA',     group: 'H' },
-    { id: 'MAR', name: 'Marrocos',  flag: '🇲🇦', confederation: 'CAF',      group: 'C' },
+    { id: 'GER', name: 'Alemanha', flag: '🇩🇪', confederation: 'UEFA', group: 'E' },
+    { id: 'ESP', name: 'Espanha', flag: '🇪🇸', confederation: 'UEFA', group: 'H' },
+    { id: 'MAR', name: 'Marrocos', flag: '🇲🇦', confederation: 'CAF', group: 'C' },
 ];
 
 // ── Mock do repositório ────────────────────────────────────────────────────

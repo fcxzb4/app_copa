@@ -1,4 +1,4 @@
-import { localGroupDataSource } from '../localGroupDataSource';
+import { localGroupDataSource } from '../data/datasources/localGroupDataSource';
 
 /**
  * Testa o data source de grupos locais.

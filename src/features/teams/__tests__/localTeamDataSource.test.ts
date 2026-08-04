@@ -1,4 +1,4 @@
-import { localTeamDataSource } from '../localTeamDataSource';
+import { localTeamDataSource } from '../data/datasources/localTeamDataSource';
 
 /**
  * Testa o data source de times locais.

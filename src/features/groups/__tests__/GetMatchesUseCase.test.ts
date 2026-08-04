@@ -1,8 +1,8 @@
-import { GetMatchesUseCase } from '../GetMatchesUseCase';
-import type { IGroupRepository } from '../../repositories/IGroupRepository';
-import type { Team } from '../../../../teams/domain/entities/Team';
-import type { Match } from '../../entities/Match';
-import type { Standing } from '../../entities/Standing';
+import type { Team } from '../../teams/domain/entities/Team';
+import type { Match } from '../domain/entities/Match';
+import type { Standing } from '../domain/entities/Standing';
+import type { IGroupRepository } from '../domain/repositories/IGroupRepository';
+import { GetMatchesUseCase } from '../domain/usecases/GetMatchesUseCase';
 
 // ── Fixtures ───────────────────────────────────────────────────────────────
 
