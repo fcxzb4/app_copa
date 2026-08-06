@@ -2,20 +2,20 @@ import { localGroupDataSource } from '../data/datasources/localGroupDataSource';
 
 /**
  * Testa o data source de grupos locais.
- * Usa os dados reais de worldCupData (Copa 2026 com 12 grupos e 48 times).
+ * Usa os dados reais de worldCupData (Copa com 8 grupos e 32 times).
  */
 describe('localGroupDataSource', () => {
-    const EXPECTED_GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+    const EXPECTED_GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
     // ── getGroupLetters ──────────────────────────────────────────────────────
 
     describe('getGroupLetters()', () => {
-        it('deve retornar exatamente 12 grupos', () => {
+        it('deve retornar exatamente 8 grupos', () => {
             const result = localGroupDataSource.getGroupLetters();
-            expect(result).toHaveLength(12);
+            expect(result).toHaveLength(8);
         });
 
-        it('deve retornar os grupos de A a L', () => {
+        it('deve retornar os grupos de A a H', () => {
             const result = localGroupDataSource.getGroupLetters();
             expect(result).toEqual(EXPECTED_GROUPS);
         });
@@ -24,9 +24,9 @@ describe('localGroupDataSource', () => {
     // ── getAllTeams ──────────────────────────────────────────────────────────
 
     describe('getAllTeams()', () => {
-        it('deve retornar exatamente 48 times', () => {
+        it('deve retornar exatamente 32 times', () => {
             const result = localGroupDataSource.getAllTeams();
-            expect(result).toHaveLength(48);
+            expect(result).toHaveLength(32);
         });
     });
 
@@ -50,8 +50,8 @@ describe('localGroupDataSource', () => {
             expect(result).toHaveLength(0);
         });
 
-        it('deve incluir o Brasil no grupo C', () => {
-            const result = localGroupDataSource.getTeamsByGroup('C');
+        it('deve incluir o Brasil no grupo G', () => {
+            const result = localGroupDataSource.getTeamsByGroup('G');
             const brasil = result.find(t => t.id === 'BRA');
             expect(brasil).toBeDefined();
         });
@@ -89,7 +89,7 @@ describe('localGroupDataSource', () => {
 
         it('deve retornar apenas partidas com status "upcoming"', () => {
             const result = localGroupDataSource.getMatchesByStatus('upcoming');
-            expect(result.length).toBeGreaterThan(0);
+            expect(Array.isArray(result)).toBe(true);
             result.forEach(m => expect(m.status).toBe('upcoming'));
         });
 

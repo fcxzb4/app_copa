@@ -94,10 +94,10 @@ export const matches: Match[] = [
   { id: 'B6', group: 'B', homeTeamId: 'SUI', awayTeamId: 'QAT', date: '25/06/2026', time: '19:00', stadium: 'AT&T Stadium, Dallas', status: 'upcoming' },
 
   // --- Grupo C ---
-  { id: 'C1', group: 'C', homeTeamId: 'BRA', awayTeamId: 'MAR', homeScore: 2, awayScore: 2, date: '13/06/2026', time: '16:00', stadium: 'SoFi Stadium, Los Angeles', status: 'completed' },
-  { id: 'C2', group: 'C', homeTeamId: 'HAI', awayTeamId: 'SCO', homeScore: 0, awayScore: 4, date: '14/06/2026', time: '18:00', stadium: 'Hard Rock Stadium, Miami', status: 'completed' },
-  { id: 'C3', group: 'C', homeTeamId: 'BRA', awayTeamId: 'HAI', homeScore: 5, awayScore: 0, date: '19/06/2026', time: '21:00', stadium: "Levi's Stadium, São Francisco", status: 'completed' },
-  { id: 'C4', group: 'C', homeTeamId: 'SCO', awayTeamId: 'MAR', homeScore: 1, awayScore: 3, date: '20/06/2026', time: '14:00', stadium: 'NRG Stadium, Houston', status: 'completed' },
+  { id: 'C1', group: 'C', homeTeamId: 'BRA', awayTeamId: 'MAR', homeScore: 2, awayScore: 0, date: '13/06/2026', time: '16:00', stadium: 'SoFi Stadium, Los Angeles', status: 'completed' },
+  { id: 'C2', group: 'C', homeTeamId: 'HAI', awayTeamId: 'SCO', homeScore: 0, awayScore: 3, date: '14/06/2026', time: '18:00', stadium: 'Hard Rock Stadium, Miami', status: 'completed' },
+  { id: 'C3', group: 'C', homeTeamId: 'BRA', awayTeamId: 'HAI', homeScore: 4, awayScore: 0, date: '19/06/2026', time: '21:00', stadium: "Levi's Stadium, São Francisco", status: 'completed' },
+  { id: 'C4', group: 'C', homeTeamId: 'SCO', awayTeamId: 'MAR', homeScore: 1, awayScore: 2, date: '20/06/2026', time: '14:00', stadium: 'NRG Stadium, Houston', status: 'completed' },
   { id: 'C5', group: 'C', homeTeamId: 'SCO', awayTeamId: 'BRA', date: '26/06/2026', time: '20:00', stadium: 'MetLife Stadium, Nova Jersey', status: 'upcoming' },
   { id: 'C6', group: 'C', homeTeamId: 'MAR', awayTeamId: 'HAI', date: '26/06/2026', time: '20:00', stadium: 'Mercedes-Benz Stadium, Atlanta', status: 'upcoming' },
 

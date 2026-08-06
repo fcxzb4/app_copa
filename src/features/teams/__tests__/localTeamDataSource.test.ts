@@ -2,7 +2,7 @@ import { localTeamDataSource } from '../data/datasources/localTeamDataSource';
 
 /**
  * Testa o data source de times locais.
- * Usa os dados reais de worldCupData (48 times da Copa).
+ * Usa os dados reais de worldCupData (32 times da Copa).
  */
 describe('localTeamDataSource', () => {
     // ── getAllTeams ──────────────────────────────────────────────────────────
@@ -13,9 +13,9 @@ describe('localTeamDataSource', () => {
             expect(result.length).toBeGreaterThan(0);
         });
 
-        it('deve retornar exatamente 48 times (formato da Copa 2026)', () => {
+        it('deve retornar exatamente 32 times (formato da Copa do Mundo)', () => {
             const result = localTeamDataSource.getAllTeams();
-            expect(result).toHaveLength(48);
+            expect(result).toHaveLength(32);
         });
 
         it('cada time deve ter as propriedades obrigatórias', () => {

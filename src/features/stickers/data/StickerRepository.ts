@@ -1,25 +1,12 @@
 import { useSQLiteContext } from 'expo-sqlite';
+import { CollectedSticker } from '../domain/entities/Sticker';
+import { UserProfile } from '../domain/entities/userProfile';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export interface CollectedSticker {
-  id: number;
-  sticker_id: string;
-  player_name: string;
-  flag: string;
-  group_name: string;
-  team_id: string | null;
-  is_duplicate: number;
-  collected_at: string;
-}
 
-export interface UserProfile {
-  id: number;
-  uid: string;
-  display_name: string | null;
-  avatar_emoji: string;
-  created_at: string;
-}
+
+
 
 // ─── Repository ───────────────────────────────────────────────────────────────
 
@@ -30,7 +17,7 @@ export interface UserProfile {
  * Instanciar diretamente apenas em contextos fora de componentes React.
  */
 export class StickerRepository {
-  constructor(private db: ReturnType<typeof useSQLiteContext>) {}
+  constructor(private db: ReturnType<typeof useSQLiteContext>) { }
 
   // ── Pacotes ────────────────────────────────────────────────────────────────
 

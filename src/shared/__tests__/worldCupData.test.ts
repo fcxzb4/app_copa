@@ -1,20 +1,20 @@
-import { teams, matches, calculateGroupStandings } from '../worldCupData';
+import { calculateGroupStandings, matches, teams } from '../data/worldCupData';
 
 /**
  * Testa os dados e a função de classificação da Copa do Mundo.
  * calculateGroupStandings é a lógica de negócio mais crítica do projeto.
  */
 describe('worldCupData', () => {
-    const ALL_GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+    const ALL_GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
     // ── Integridade dos dados estáticos ──────────────────────────────────────
 
     describe('times (teams)', () => {
-        it('deve conter exatamente 48 times', () => {
-            expect(teams).toHaveLength(48);
+        it('deve conter exatamente 32 times', () => {
+            expect(teams).toHaveLength(32);
         });
 
-        it('deve ter exatamente 4 times em cada um dos 12 grupos', () => {
+        it('deve ter exatamente 4 times em cada um dos 8 grupos', () => {
             ALL_GROUPS.forEach(group => {
                 const groupTeams = teams.filter(t => t.group === group);
                 expect(groupTeams).toHaveLength(4);

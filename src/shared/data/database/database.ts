@@ -5,7 +5,7 @@ import { runDatabaseSeed } from './seeds/runSeed';
  * Versão atual do schema do banco de dados.
  * Incremente este número sempre que adicionar uma migration.
  */
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 export const DB_NAME = 'popular_copa.db';
 
 /**
@@ -108,6 +108,15 @@ export async function migrateDb(db: SQLiteDatabase): Promise<void> {
     // Atualiza a versão do schema para v2
     await db.execAsync(`PRAGMA user_version = 2`);
   }
+
+  // ── Migration v3: Re-seeding das 32 seleções oficiais do Catar 2022 ──────────
+  if (currentVersion < 3) {
+    await db.execAsync(`DELETE FROM matches;`);
+    await db.execAsync(`DELETE FROM teams;`);
+    await runDatabaseSeed(db);
+    await db.execAsync(`PRAGMA user_version = 3;`);
+  }
 }
+
 
 

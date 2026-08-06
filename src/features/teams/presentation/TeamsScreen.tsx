@@ -21,7 +21,7 @@ export default function TeamsScreen() {
       <View style={styles.heroSection}>
         <Text style={styles.headerTitle}>Seleções Participantes</Text>
         <Text style={styles.headerSubtitle}>
-          Explore os 48 países classificados para a Copa do Mundo FIFA 2026.
+          Explore os 32 países que participaram da Copa do Mundo FIFA.
         </Text>
       </View>
 
@@ -69,7 +69,7 @@ export default function TeamsScreen() {
       {/* Count Indicator */}
       <View style={styles.countContainer}>
         <Text style={styles.countText}>
-          Mostrando <Text style={styles.countHighlight}>{filteredTeams.length}</Text> das 48 seleções
+          Mostrando <Text style={styles.countHighlight}>{filteredTeams.length}</Text> das {teams.length} seleções
         </Text>
       </View>
 
