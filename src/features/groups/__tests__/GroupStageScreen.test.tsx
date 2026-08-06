@@ -55,6 +55,6 @@ describe('GroupStageScreen', () => {
 
     it('exibe tabela do Grupo A com as seleções participantes', () => {
         expect(hasText(json, 'Tabela Grupo')).toBe(true);
-        expect(hasText(json, 'Holanda')).toBe(true);
+        expect(hasText(json, 'México')).toBe(true);
     });
 });

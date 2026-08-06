@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Text,
   View,
@@ -7,14 +7,20 @@ import {
 } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { calculateGroupStandings } from '../../../shared/data/worldCupData';
 import { homeStyles as styles } from './styles/home_styles';
 
 export default function HomeScreen() {
+  // Obtém a classificação atualizada do Grupo C (Grupo do Brasil na Copa 2026)
+  const groupCStandings = useMemo(() => {
+    return calculateGroupStandings('C');
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
-        {/* Section 1: JOGOS AO-VIVO */}
+        {/* Section 1: JOGOS AO-VIVO (3 jogos dos 16-avos de final) */}
         <View>
           <Text style={styles.sectionTitle}>Jogos Ao-Vivo</Text>
           <ScrollView 
@@ -23,10 +29,10 @@ export default function HomeScreen() {
             style={styles.liveScroll}
             contentContainerStyle={styles.liveScrollContent}
           >
-            {/* Card 1: BRA x ARG */}
+            {/* Card 1: BRA x JPN (16-avos de Final) */}
             <View style={styles.liveCard}>
               <View style={styles.liveCardHeader}>
-                <Text style={styles.liveCardPhase}>{"Fase de Grupos • 82'"}</Text>
+                <Text style={styles.liveCardPhase}>{"16-avos de Final • 78'"}</Text>
                 <View style={styles.liveBadge}>
                   <Text style={styles.liveBadgeText}>● AO VIVO</Text>
                 </View>
@@ -41,18 +47,18 @@ export default function HomeScreen() {
                 </View>
                 <View style={styles.liveTeamRow}>
                   <View style={styles.liveTeamLeft}>
-                    <Text style={styles.liveTeamFlag}>🇦🇷</Text>
-                    <Text style={styles.liveTeamCode}>ARG</Text>
+                    <Text style={styles.liveTeamFlag}>🇯🇵</Text>
+                    <Text style={styles.liveTeamCode}>JPN</Text>
                   </View>
                   <Text style={styles.liveTeamScore}>1</Text>
                 </View>
               </View>
             </View>
 
-            {/* Card 2: FRA x GER */}
+            {/* Card 2: MEX x ECU (16-avos de Final) */}
             <View style={styles.liveCard}>
               <View style={styles.liveCardHeader}>
-                <Text style={styles.liveCardPhase}>{"Fase de Grupos • 45'"}</Text>
+                <Text style={styles.liveCardPhase}>{"16-avos de Final • 45'"}</Text>
                 <View style={[styles.liveBadge, { backgroundColor: '#475569' }]}>
                   <Text style={styles.liveBadgeText}>Intervalo</Text>
                 </View>
@@ -60,74 +66,84 @@ export default function HomeScreen() {
               <View style={styles.liveTeamsContainer}>
                 <View style={styles.liveTeamRow}>
                   <View style={styles.liveTeamLeft}>
-                    <Text style={styles.liveTeamFlag}>🇫🇷</Text>
-                    <Text style={styles.liveTeamCode}>FRA</Text>
+                    <Text style={styles.liveTeamFlag}>🇲🇽</Text>
+                    <Text style={styles.liveTeamCode}>MEX</Text>
                   </View>
-                  <Text style={styles.liveTeamScore}>0</Text>
+                  <Text style={styles.liveTeamScore}>1</Text>
                 </View>
                 <View style={styles.liveTeamRow}>
                   <View style={styles.liveTeamLeft}>
-                    <Text style={styles.liveTeamFlag}>🇩🇪</Text>
-                    <Text style={styles.liveTeamCode}>GER</Text>
+                    <Text style={styles.liveTeamFlag}>🇪🇨</Text>
+                    <Text style={styles.liveTeamCode}>ECU</Text>
                   </View>
                   <Text style={styles.liveTeamScore}>0</Text>
                 </View>
               </View>
             </View>
+
+            {/* Card 3: ARG x CPV (16-avos de Final) */}
+            <View style={styles.liveCard}>
+              <View style={styles.liveCardHeader}>
+                <Text style={styles.liveCardPhase}>{"16-avos de Final • 32'"}</Text>
+                <View style={styles.liveBadge}>
+                  <Text style={styles.liveBadgeText}>● AO VIVO</Text>
+                </View>
+              </View>
+              <View style={styles.liveTeamsContainer}>
+                <View style={styles.liveTeamRow}>
+                  <View style={styles.liveTeamLeft}>
+                    <Text style={styles.liveTeamFlag}>🇦🇷</Text>
+                    <Text style={styles.liveTeamCode}>ARG</Text>
+                  </View>
+                  <Text style={styles.liveTeamScore}>3</Text>
+                </View>
+                <View style={styles.liveTeamRow}>
+                  <View style={styles.liveTeamLeft}>
+                    <Text style={styles.liveTeamFlag}>🇨🇻</Text>
+                    <Text style={styles.liveTeamCode}>CPV</Text>
+                  </View>
+                  <Text style={styles.liveTeamScore}>0</Text>
+                </View>
+              </View>
+            </View>
+
           </ScrollView>
         </View>
 
-        {/* Section 2: GRUPOS Classificação preview */}
+        {/* Section 2: GRUPOS Classificação preview (Grupo C - Grupo do Brasil em 2026) */}
         <View>
           <Text style={styles.sectionTitle}>Grupos</Text>
           <View style={styles.groupsCard}>
             <View style={styles.groupsCardHeader}>
               <View>
                 <Text style={styles.groupsCardTitle}>Classificação</Text>
-                <Text style={styles.groupsCardSubtitle}>Grupo G • Atualizado Agora</Text>
+                <Text style={styles.groupsCardSubtitle}>Grupo C • Atualizado Agora</Text>
               </View>
               <Ionicons name="bar-chart" size={24} color="#FACC15" />
             </View>
 
             <View style={styles.groupsRowsContainer}>
-              {/* Row 1: Brasil */}
-              <View style={styles.groupsRow}>
-                <View style={styles.groupsRowLeft}>
-                  <Text style={styles.groupsRowPos}>1</Text>
-                  <Text style={styles.groupsRowFlag}>🇧🇷</Text>
-                  <Text style={styles.groupsRowName}>Brasil</Text>
-                </View>
-                <View style={styles.groupsRowRight}>
-                  <Text style={styles.groupsRowPts}>7 pts</Text>
-                  <Text style={[styles.groupsRowSG, styles.sgPositive]}>+4 SG</Text>
-                </View>
-              </View>
+              {groupCStandings.map((standing, index) => {
+                const sg = standing.goalDifference;
+                const sgFormatted = sg > 0 ? `+${sg} SG` : `${sg} SG`;
+                const isPositive = sg >= 0;
 
-              {/* Row 2: Suíça */}
-              <View style={styles.groupsRow}>
-                <View style={styles.groupsRowLeft}>
-                  <Text style={styles.groupsRowPos}>2</Text>
-                  <Text style={styles.groupsRowFlag}>🇨🇭</Text>
-                  <Text style={styles.groupsRowName}>Suíça</Text>
-                </View>
-                <View style={styles.groupsRowRight}>
-                  <Text style={styles.groupsRowPts}>4 pts</Text>
-                  <Text style={[styles.groupsRowSG, styles.sgPositive]}>+1 SG</Text>
-                </View>
-              </View>
-
-              {/* Row 3: Camarões */}
-              <View style={styles.groupsRow}>
-                <View style={styles.groupsRowLeft}>
-                  <Text style={styles.groupsRowPos}>3</Text>
-                  <Text style={styles.groupsRowFlag}>🇨🇲</Text>
-                  <Text style={styles.groupsRowName}>Camarões</Text>
-                </View>
-                <View style={styles.groupsRowRight}>
-                  <Text style={styles.groupsRowPts}>3 pts</Text>
-                  <Text style={[styles.groupsRowSG, styles.sgNegative]}>-2 SG</Text>
-                </View>
-              </View>
+                return (
+                  <View key={standing.teamId} style={styles.groupsRow}>
+                    <View style={styles.groupsRowLeft}>
+                      <Text style={styles.groupsRowPos}>{index + 1}</Text>
+                      <Text style={styles.groupsRowFlag}>{standing.team.flag}</Text>
+                      <Text style={styles.groupsRowName}>{standing.team.name}</Text>
+                    </View>
+                    <View style={styles.groupsRowRight}>
+                      <Text style={styles.groupsRowPts}>{standing.points} pts</Text>
+                      <Text style={[styles.groupsRowSG, isPositive ? styles.sgPositive : styles.sgNegative]}>
+                        {sgFormatted}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
             </View>
 
             <Link href="/groups" asChild>

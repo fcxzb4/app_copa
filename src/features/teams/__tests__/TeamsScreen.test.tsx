@@ -41,8 +41,8 @@ describe('TeamsScreen', () => {
         expect(hasText(json, 'Seleções Participantes')).toBe(true);
     });
 
-    it('exibe o contador inicial de 32 seleções', () => {
-        expect(hasText(json, '32')).toBe(true);
+    it('exibe o contador inicial de 48 seleções', () => {
+        expect(hasText(json, '48')).toBe(true);
         expect(hasText(json, 'seleções')).toBe(true);
     });
 

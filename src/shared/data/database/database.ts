@@ -5,7 +5,7 @@ import { runDatabaseSeed } from './seeds/runSeed';
  * Versão atual do schema do banco de dados.
  * Incremente este número sempre que adicionar uma migration.
  */
-export const DB_VERSION = 3;
+export const DB_VERSION = 4;
 export const DB_NAME = 'popular_copa.db';
 
 /**
@@ -115,6 +115,14 @@ export async function migrateDb(db: SQLiteDatabase): Promise<void> {
     await db.execAsync(`DELETE FROM teams;`);
     await runDatabaseSeed(db);
     await db.execAsync(`PRAGMA user_version = 3;`);
+  }
+
+  // ── Migration v4: Re-seeding das 48 seleções dos 12 grupos da Copa de 2026 ─────
+  if (currentVersion < 4) {
+    await db.execAsync(`DELETE FROM matches;`);
+    await db.execAsync(`DELETE FROM teams;`);
+    await runDatabaseSeed(db);
+    await db.execAsync(`PRAGMA user_version = 4;`);
   }
 }
 

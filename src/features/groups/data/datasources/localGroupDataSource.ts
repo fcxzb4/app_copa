@@ -30,6 +30,6 @@ export const localGroupDataSource = {
     },
 
     getGroupLetters(): string[] {
-        return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
     },
 };

@@ -13,9 +13,9 @@ describe('localTeamDataSource', () => {
             expect(result.length).toBeGreaterThan(0);
         });
 
-        it('deve retornar exatamente 32 times (formato da Copa do Mundo)', () => {
+        it('deve retornar exatamente 48 times (formato da Copa 2026)', () => {
             const result = localTeamDataSource.getAllTeams();
-            expect(result).toHaveLength(32);
+            expect(result).toHaveLength(48);
         });
 
         it('cada time deve ter as propriedades obrigatórias', () => {

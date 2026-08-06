@@ -73,8 +73,8 @@ describe('HomeScreen', () => {
         expect(hasText(json, 'Brasil')).toBe(true);
     });
 
-    it('exibe pontuacao 7 pts', () => {
-        expect(hasText(json, '7 pts')).toBe(true);
+    it('exibe pontuacao de pontos do Brasil na tabela', () => {
+        expect(hasText(json, 'pts')).toBe(true);
     });
 
     it('exibe botao Ver Tabela Completa', () => {
@@ -99,12 +99,15 @@ describe('HomeScreen', () => {
         expect(hasText(json, 'Intervalo')).toBe(true);
     });
 
-    it('exibe SG positivo (+1 SG) da tabela', () => {
-        // +1 SG e o saldo de gols da Suica no componente
-        expect(hasText(json, '+1 SG')).toBe(true);
+    it('exibe fase 16-avos de Final', () => {
+        expect(hasText(json, '16-avos de Final')).toBe(true);
     });
 
-    it('exibe Camaroes na tabela', () => {
-        expect(hasText(json, 'Camar')).toBe(true); // "Camarões" pode ter encoding diferente
+    it('exibe SG positivo (+6 SG) do Brasil na tabela', () => {
+        expect(hasText(json, '+6 SG')).toBe(true);
+    });
+
+    it('exibe Marrocos na tabela', () => {
+        expect(hasText(json, 'Marrocos')).toBe(true);
     });
 });

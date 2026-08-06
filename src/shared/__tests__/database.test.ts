@@ -20,12 +20,12 @@ describe('database configuration and migrations', () => {
 
     it('deve ter as constantes de nome e versão configuradas corretamente', () => {
         expect(DB_NAME).toBe('popular_copa.db');
-        expect(DB_VERSION).toBe(3);
+        expect(DB_VERSION).toBe(4);
     });
 
     describe('migrateDb()', () => {
         it('deve habilitar WAL e foreign keys na inicialização', async () => {
-            (mockDb.getFirstAsync as jest.Mock).mockResolvedValue({ user_version: 3 });
+            (mockDb.getFirstAsync as jest.Mock).mockResolvedValue({ user_version: 4 });
 
             await migrateDb(mockDb as unknown as SQLiteDatabase);
 
@@ -34,7 +34,7 @@ describe('database configuration and migrations', () => {
         });
 
         it('não deve executar migrations se a versão atual for maior ou igual a DB_VERSION', async () => {
-            (mockDb.getFirstAsync as jest.Mock).mockResolvedValue({ user_version: 3 });
+            (mockDb.getFirstAsync as jest.Mock).mockResolvedValue({ user_version: 4 });
 
             await migrateDb(mockDb as unknown as SQLiteDatabase);
 

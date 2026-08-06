@@ -5,16 +5,16 @@ import { calculateGroupStandings, matches, teams } from '../data/worldCupData';
  * calculateGroupStandings é a lógica de negócio mais crítica do projeto.
  */
 describe('worldCupData', () => {
-    const ALL_GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    const ALL_GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
     // ── Integridade dos dados estáticos ──────────────────────────────────────
 
     describe('times (teams)', () => {
-        it('deve conter exatamente 32 times', () => {
-            expect(teams).toHaveLength(32);
+        it('deve conter exatamente 48 times', () => {
+            expect(teams).toHaveLength(48);
         });
 
-        it('deve ter exatamente 4 times em cada um dos 8 grupos', () => {
+        it('deve ter exatamente 4 times em cada um dos 12 grupos', () => {
             ALL_GROUPS.forEach(group => {
                 const groupTeams = teams.filter(t => t.group === group);
                 expect(groupTeams).toHaveLength(4);

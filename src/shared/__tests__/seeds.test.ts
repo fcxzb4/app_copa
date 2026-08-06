@@ -5,12 +5,12 @@ import { TEAMS_SEED } from '../data/database/seeds/teamsSeed';
 
 describe('Database Seeds', () => {
     describe('TEAMS_SEED', () => {
-        it('deve conter 32 seleções', () => {
-            expect(TEAMS_SEED).toHaveLength(32);
+        it('deve conter 48 seleções', () => {
+            expect(TEAMS_SEED).toHaveLength(48);
         });
 
-        it('deve conter 4 seleções para cada um dos 8 grupos (A-H)', () => {
-            const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        it('deve conter 4 seleções para cada um dos 12 grupos (A-L)', () => {
+            const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
             groups.forEach(g => {
                 const teamsInGroup = TEAMS_SEED.filter(t => t.group_name === g);
                 expect(teamsInGroup).toHaveLength(4);
@@ -73,7 +73,7 @@ describe('Database Seeds', () => {
         });
 
         it('deve abortar sem dar seed se o banco já tiver times cadastrados (dupla proteção)', async () => {
-            (mockDb.getFirstAsync as jest.Mock).mockResolvedValue({ total: 32 });
+            (mockDb.getFirstAsync as jest.Mock).mockResolvedValue({ total: 48 });
 
             await runDatabaseSeed(mockDb as unknown as SQLiteDatabase);
 
@@ -89,7 +89,7 @@ describe('Database Seeds', () => {
             expect(mockDb.execAsync).toHaveBeenCalledWith('BEGIN TRANSACTION;');
             expect(mockDb.execAsync).toHaveBeenCalledWith('COMMIT;');
 
-            // Verifica se inseriu 32 seleções e todas as partidas
+            // Verifica se inseriu 48 seleções e todas as partidas
             const totalInserts = TEAMS_SEED.length + MATCHES_SEED.length;
             expect(mockDb.runAsync).toHaveBeenCalledTimes(totalInserts);
         });

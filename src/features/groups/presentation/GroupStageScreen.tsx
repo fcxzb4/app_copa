@@ -10,7 +10,7 @@ import {
 } from './components';
 import { groupStageStyles as styles } from './styles/groupStageStyles';
 
-const groupsList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const groupsList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
 export default function GroupStageScreen() {
     const [selectedGroup, setSelectedGroup] = useState('A');
