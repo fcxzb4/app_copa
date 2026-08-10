@@ -1,7 +1,7 @@
 import { Link, Slot, usePathname, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { Suspense } from 'react';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { layoutStyles } from '../shared/presentation/components/layout/layoutStyles';
 import { Ionicons } from '@expo/vector-icons';
@@ -134,22 +134,21 @@ function AppContent() {
           </Link>
 
           {/* APOSTAS Tab */}
-          <TouchableOpacity 
-            style={styles.navItem} 
-            onPress={() => Alert.alert('Apostas', 'Sistema de palpites e apostas da copa em desenvolvimento!')}
-          >
-            {isBets ? (
-              <View style={styles.activeTabCapsule}>
-                <Ionicons name="ticket" size={16} color="#05110B" />
-                <Text style={styles.activeNavLabel}>Apostas</Text>
-              </View>
-            ) : (
-              <>
-                <Ionicons name="ticket-outline" size={18} color="#8CA185" />
-                <Text style={styles.navLabel}>Apostas</Text>
-              </>
-            )}
-          </TouchableOpacity>
+          <Link href="/bets" asChild>
+            <TouchableOpacity style={styles.navItem}>
+              {isBets ? (
+                <View style={styles.activeTabCapsule}>
+                  <Ionicons name="ticket" size={16} color="#05110B" />
+                  <Text style={styles.activeNavLabel}>Apostas</Text>
+                </View>
+              ) : (
+                <>
+                  <Ionicons name="ticket-outline" size={18} color="#8CA185" />
+                  <Text style={styles.navLabel}>Apostas</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </Link>
         </View>
 
       </SafeAreaView>

@@ -5,7 +5,7 @@ import { runDatabaseSeed } from './seeds/runSeed';
  * Versão atual do schema do banco de dados.
  * Incremente este número sempre que adicionar uma migration.
  */
-export const DB_VERSION = 4;
+export const DB_VERSION = 5;
 export const DB_NAME = 'popular_copa.db';
 
 /**
@@ -123,6 +123,21 @@ export async function migrateDb(db: SQLiteDatabase): Promise<void> {
     await db.execAsync(`DELETE FROM teams;`);
     await runDatabaseSeed(db);
     await db.execAsync(`PRAGMA user_version = 4;`);
+  }
+
+  // ── Migration v5: Tabela de palpites (bets) ─────────────────────────────────
+  if (currentVersion < 5) {
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS bets (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        match_id      TEXT    NOT NULL,
+        prediction    TEXT    NOT NULL,
+        packs_wagered INTEGER NOT NULL DEFAULT 1,
+        status        TEXT    NOT NULL DEFAULT 'open',
+        created_at    TEXT    DEFAULT (datetime('now'))
+      );
+    `);
+    await db.execAsync(`PRAGMA user_version = 5;`);
   }
 }
 

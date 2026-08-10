@@ -98,6 +98,19 @@ export function useStickerDatabase(): UseStickerDatabaseReturn {
     await loadAll();
   }, [loadAll]);
 
+  const setPacksCount = useCallback(
+    async (count: number): Promise<void> => {
+      try {
+        await repo.setPacksRemaining(count);
+        setPacksRemaining(Math.max(0, count));
+      } catch (err) {
+        console.error('[useStickerDatabase] Erro ao definir pacotes:', err);
+        throw err;
+      }
+    },
+    [db]
+  );
+
   return {
     packsRemaining,
     totalCollected,
@@ -107,6 +120,7 @@ export function useStickerDatabase(): UseStickerDatabaseReturn {
     error,
     openPack,
     saveStickers,
+    setPacksCount,
     refresh,
   };
 }

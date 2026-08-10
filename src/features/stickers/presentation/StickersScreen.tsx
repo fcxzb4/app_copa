@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
     Alert,
     Animated,
@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { teams } from '../../../shared/data/worldCupData';
 import { stickersStyles as styles } from './styles/stickers_styles';
 import { useStickerDatabase } from '../data/useStickerDatabase';
@@ -55,7 +55,15 @@ export default function StickersScreen() {
         isLoading,
         openPack,
         saveStickers,
+        refresh,
     } = useStickerDatabase();
+
+    // Sincroniza saldo de pacotes sempre que a tela entrar em foco
+    useFocusEffect(
+        useCallback(() => {
+            refresh();
+        }, [refresh])
+    );
 
     const [isOpening, setIsOpening] = useState(false);
     const [revealedStickers, setRevealedStickers] = useState<OpenedSticker[]>([]);

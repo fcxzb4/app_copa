@@ -37,6 +37,8 @@ export interface UseStickerDatabaseReturn {
     openPack: () => Promise<number>;
     /** Salva uma lista de figurinhas no álbum */
     saveStickers: (stickers: StickerToSave[]) => Promise<void>;
+    /** Define manualmente o total de pacotes disponíveis (admin) */
+    setPacksCount: (count: number) => Promise<void>;
     /** Força um reload dos dados do banco */
     refresh: () => Promise<void>;
 }
